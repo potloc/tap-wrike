@@ -2,7 +2,7 @@
 import os
 import json
 import singer
-from singer import utils, metadata
+from singer import utils, metadata, Transformer
 from singer.catalog import Catalog, CatalogEntry
 from singer.schema import Schema
 
@@ -131,21 +131,26 @@ def sync_endpoint(config, state, stream, client):
 
     tap_data, next_page_token = client.get(stream.path, **stream.params, **bookmark_params)
 
-    while True:
-        for row in tap_data:
-            # TODO: Field selection https://github.com/singer-io/getting-started/blob/master/docs/SYNC_MODE.md#field-selection
+    with Transformer() as transformer:
+        while True:
+            for row in tap_data:
+                # Use the singer transformer for Field selection
+                # https://github.com/singer-io/getting-started/blob/master/docs/SYNC_MODE.md#field-selection
+                processed_row = transformer.transform(row,
+                                                        stream.catalog_entry.schema.to_dict(),
+                                                        metadata.to_map(stream.catalog_entry.metadata))
 
-            # write one row to the stream:
-            singer.write_records(stream.catalog_entry.tap_stream_id, [row])
-            total_records += 1
+                # write one row to the stream:
+                singer.write_record(stream.catalog_entry.tap_stream_id, processed_row)
+                total_records += 1
 
-            if bookmark_column:
-                parsed_bookmark = utils.strptime_with_tz(row[bookmark_column])
-                max_bookmark = max(max_bookmark, parsed_bookmark) if max_bookmark is not None else parsed_bookmark
+                if bookmark_column:
+                    parsed_bookmark = utils.strptime_with_tz(row[bookmark_column])
+                    max_bookmark = max(max_bookmark, parsed_bookmark) if max_bookmark is not None else parsed_bookmark
 
-        if next_page_token is None: break
+            if next_page_token is None: break
 
-        tap_data, next_page_token = client.get(stream.path, **stream.params, **bookmark_params, nextPageToken=next_page_token)
+            tap_data, next_page_token = client.get(stream.path, **stream.params, **bookmark_params, nextPageToken=next_page_token)
 
     if (bookmark_column is not None) and (max_bookmark is not None):
         string_bookmark = utils.strftime(max_bookmark, format_str=utils.DATETIME_PARSE)
