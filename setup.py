@@ -10,9 +10,9 @@ setup(
     classifiers=["Programming Language :: Python :: 3 :: Only"],
     py_modules=["tap_wrike"],
     install_requires=[
-        # NB: Pin these to a more specific version for tap reliability
-        "singer-python",
-        "requests",
+        "backoff==1.8.0",
+        "requests==2.23.0",
+        "singer-python==5.9.0",
     ],
     entry_points="""
     [console_scripts]
