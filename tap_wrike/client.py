@@ -32,7 +32,8 @@ class Client:
         if response.status_code >= 500:
             raise Server5xxError()
 
-        # TODO: Rate limits?
+        # NOTE: If we notice rate limiting, use the following singer util:
+        # https://github.com/singer-io/singer-python/blob/master/singer/utils.py#L81
 
         if response.status_code != 200:
             LOGGER.error(f"{response.status_code}: {response.text}")
