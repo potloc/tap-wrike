@@ -23,13 +23,13 @@ STREAMS = {
         "params": {},
     }),
     "folders": dotdict({
-        # "replication_method": "INCREMENTAL", TODO
-        # "replication_keys": ["updatedDate"],
         "path": "folders",
         "params": {
             "fields": "[\"metadata\",\"hasAttachments\",\"attachmentCount\",\"briefDescription\",\"customFields\",\"customColumnIds\",\"superParentIds\",\"space\",\"contractType\"]",
             "project": "false",
         },
+        "replication_method": "INCREMENTAL",
+        "replication_key": "updatedDate",
     }),
     "projects": dotdict({
         "path": "folders",
@@ -37,6 +37,8 @@ STREAMS = {
             "fields": "[\"metadata\",\"hasAttachments\",\"attachmentCount\",\"briefDescription\",\"customFields\",\"customColumnIds\",\"superParentIds\",\"space\",\"contractType\"]",
             "project": "true",
         },
+        "replication_method": "INCREMENTAL",
+        "replication_key": "updatedDate",
     }),
     "tasks": dotdict({
         "path": "tasks",
@@ -44,12 +46,16 @@ STREAMS = {
             "fields": "[\"authorIds\",\"hasAttachments\",\"attachmentCount\",\"parentIds\",\"superParentIds\",\"sharedIds\",\"responsibleIds\",\"description\",\"briefDescription\",\"recurrent\",\"superTaskIds\",\"subTaskIds\",\"dependencyIds\",\"metadata\",\"customFields\",\"effortAllocation\",\"billingType\"]",
             "pageSize": 1000,
         },
+        "replication_method": "INCREMENTAL",
+        "replication_key": "updatedDate",
     }),
     "timelogs": dotdict({
         "path": "timelogs",
         "params": {
             "fields": "[\"billingType\"]"
-        }
+        },
+        "replication_method": "INCREMENTAL",
+        "replication_key": "updatedDate",
     }),
 }
 
@@ -72,12 +78,12 @@ def discover():
 
         key_properties = stream.get("key_properties", ["id"])
         replication_method = stream.get("replication_method", "FULL_TABLE")
-        replication_keys = stream.get("replication_keys", []) # Bookmark
+        replication_key = stream.get("replication_key") # Bookmark
 
         stream_metadata = metadata.get_standard_metadata(
             schema=schema,
             key_properties=key_properties,
-            valid_replication_keys=replication_keys,
+            valid_replication_keys=[replication_key],
             replication_method=replication_method,
         )
         for entry in stream_metadata:
@@ -93,7 +99,7 @@ def discover():
                 schema=Schema.from_dict(schema),
                 key_properties=key_properties,
                 metadata=stream_metadata,
-                replication_key=None,
+                replication_key=replication_key,
                 is_view=None,
                 database=None,
                 table=None,
@@ -108,8 +114,11 @@ def discover():
 def sync_endpoint(config, state, stream, client):
     """ Sync data from tap source """
 
-    bookmark_column = stream.catalog_entry.replication_key
-    is_sorted = True  # TODO: indicate whether data is sorted ascending on bookmark value
+    bookmark_column = stream.get("replication_key")
+    last_bookmark = singer.get_bookmark(state, stream.catalog_entry.tap_stream_id, bookmark_column)
+    bookmark_params = {}
+    if (bookmark_column is not None) and (last_bookmark is not None):
+        bookmark_params = { bookmark_column: f"{{\"start\":\"{last_bookmark}\"}}" }
 
     singer.write_schema(
         stream_name=stream.catalog_entry.tap_stream_id,
@@ -117,10 +126,10 @@ def sync_endpoint(config, state, stream, client):
         key_properties=stream.catalog_entry.key_properties,
     )
 
-    max_bookmark = None
+    max_bookmark = utils.strptime_with_tz(last_bookmark) if last_bookmark else None
     total_records = 0
 
-    tap_data, next_page_token = client.get(stream.path, **stream.params)
+    tap_data, next_page_token = client.get(stream.path, **stream.params, **bookmark_params)
 
     while True:
         for row in tap_data:
@@ -131,60 +140,40 @@ def sync_endpoint(config, state, stream, client):
             total_records += 1
 
             if bookmark_column:
-                if is_sorted:
-                    # update bookmark to latest value
-                    singer.write_state({ stream.catalog_entry.tap_stream_id: row[bookmark_column] })
-                else:
-                    # if data unsorted, save max value until end of writes
-                    max_bookmark = max(max_bookmark, row[bookmark_column])
+                parsed_bookmark = utils.strptime_with_tz(row[bookmark_column])
+                max_bookmark = max(max_bookmark, parsed_bookmark) if max_bookmark is not None else parsed_bookmark
 
         if next_page_token is None: break
 
-        tap_data, next_page_token = client.get(stream.path, **stream.params, nextPageToken=next_page_token)
+        tap_data, next_page_token = client.get(stream.path, **stream.params, **bookmark_params, nextPageToken=next_page_token)
 
-    if bookmark_column and not is_sorted:
-        singer.write_state({ stream.catalog_entry.tap_stream_id: max_bookmark })
+    if (bookmark_column is not None) and (max_bookmark is not None):
+        string_bookmark = utils.strftime(max_bookmark, format_str=utils.DATETIME_PARSE)
+        singer.write_bookmark(state, stream.catalog_entry.tap_stream_id, bookmark_column, string_bookmark)
+        singer.write_state(state)
 
     return total_records
 
-# Currently syncing sets the stream currently being delivered in the state.
-# If the integration is interrupted, this state property is used to identify
-#  the starting point to continue from.
-# Reference: https://github.com/singer-io/singer-python/blob/master/singer/bookmarks.py#L41-L46
-def update_currently_syncing(state, stream_name):
-    if (stream_name is None) and ("currently_syncing" in state):
-        del state["currently_syncing"]
-    else:
-        singer.set_currently_syncing(state, stream_name)
-    singer.write_state(state)
-
 
 def sync(config, state, catalog, client):
-    # Get selected_streams from catalog, based on state last_stream
-    #   last_stream = Previous currently synced stream, if the load was interrupted
-    last_stream = singer.get_currently_syncing(state)
-    LOGGER.info(f"last/currently syncing stream: {last_stream}")
+    # Get selected_streams from catalog
     selected_streams = []
-    for stream in catalog.get_selected_streams(state):
-        selected_streams.append(stream.stream)
+    for catalog_entry in catalog.get_selected_streams(state):
+        selected_streams.append(catalog_entry)
     LOGGER.info(f"Selected streams: {selected_streams}")
-    if not selected_streams or selected_streams == []:
-        return
 
     # Loop through endpoints in selected_streams
-    for stream_name, stream in STREAMS.items():
-        if stream_name in selected_streams:
-            LOGGER.info(f"Syncing stream: {stream_name}")
+    for catalog_entry in selected_streams:
+        stream_name = catalog_entry.stream
+        stream = STREAMS.get(stream_name)
+        stream["catalog_entry"] = catalog_entry # Merge stream with catalog entry for it
 
-            update_currently_syncing(state, stream_name)
+        LOGGER.info(f"Syncing stream: {stream_name}")
 
-            # Merge stream with catalog entry for it?
-            stream["catalog_entry"] = catalog.get_stream(stream_name)
+        total_records = sync_endpoint(config, state, stream, client)
 
-            total_records = sync_endpoint(config, state, stream, client)
+        LOGGER.info(f"FINISHED Syncing: {stream_name}, total_records: {total_records}")
 
-            update_currently_syncing(state, None)
-            LOGGER.info(f"FINISHED Syncing: {stream_name}, total_records: {total_records}")
 
 @utils.handle_top_exception(LOGGER)
 def main():
