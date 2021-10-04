@@ -1,0 +1,52 @@
+{
+  "type": ["object"],
+  "properties": {
+    "id": {
+      "type": ["string"]
+    },
+    "taskId": {
+      "type": ["string"]
+    },
+    "userId": {
+      "type": ["string"]
+    },
+    "categoryId": {
+      "type": ["null", "string"]
+    },
+    "billingType": {
+      "type": ["null", "string"]
+    },
+    "hours": {
+      "type": ["number"]
+    },
+    "createdDate": {
+      "type": ["string"],
+      "format": "date-time"
+    },
+    "updatedDate": {
+      "type": ["string"],
+      "format": "date-time"
+    },
+    "trackedDate": {
+      "type": ["string"],
+      "format": "date"
+    },
+    "comment": {
+      "type": ["string"]
+    },
+    "finance": {
+      "type": ["null", "object"],
+      "properties": {
+        "currency": {
+          "type": ["null", "string"]
+        },
+        "actualFees": {
+          "type": ["null", "number"]
+        },
+        "actualCost": {
+          "type": ["null", "number"]
+        }
+      }
+    }
+  }
+}

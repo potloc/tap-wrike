@@ -1,0 +1,201 @@
+{
+  "type": ["object"],
+  "properties": {
+    "id": {
+      "type": ["string"]
+    },
+    "accountId": {
+      "type": ["string"]
+    },
+    "title": {
+      "type": ["string"]
+    },
+    "description": {
+      "type": ["null", "string"]
+    },
+    "briefDescription": {
+      "type": ["null", "string"]
+    },
+    "parentIds": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["string"]
+      }
+    },
+    "superParentIds": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["string"]
+      }
+    },
+    "sharedIds": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["string"]
+      }
+    },
+    "responsibleIds": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["string"]
+      }
+    },
+    "status": {
+      "type": ["string"]
+    },
+    "importance": {
+      "type": ["string"]
+    },
+    "createdDate": {
+      "type": ["string"],
+      "format": "date-time"
+    },
+    "updatedDate": {
+      "type": ["string"],
+      "format": "date-time"
+    },
+    "completedDate": {
+      "type": ["string"],
+      "format": "date-time"
+    },
+    "dates": {
+      "type": ["object"],
+      "properties": {
+        "type": {
+          "type": ["string"]
+        },
+        "duration": {
+          "type": ["null", "integer"]
+        },
+        "start": {
+          "type": ["null", "string"]
+        },
+        "due": {
+          "type": ["null", "string"]
+        },
+        "workOnWeekends": {
+          "type": ["null", "boolean"]
+        }
+      }
+    },
+    "scope": {
+      "type": ["string"]
+    },
+    "authorIds": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["string"]
+      }
+    },
+    "customStatusId": {
+      "type": ["string"]
+    },
+    "hasAttachments": {
+      "type": ["null", "boolean"]
+    },
+    "attachmentCount": {
+      "type": ["null", "integer"]
+    },
+    "permalink": {
+      "type": ["string"]
+    },
+    "priority": {
+      "type": ["string"]
+    },
+    "followerIds": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["string"]
+      }
+    },
+    "recurrent": {
+      "type": ["null", "boolean"]
+    },
+    "superTaskIds": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["string"]
+      }
+    },
+    "subTaskIds": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["string"]
+      }
+    },
+    "dependencyIds": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["string"]
+      }
+    },
+    "metadata": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["object"],
+        "properties": {
+          "key": {
+            "type": ["string"]
+          },
+          "value": {
+            "type": ["string"]
+          }
+        }
+      }
+    },
+    "customFields": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["object"],
+        "properties": {
+          "id": {
+            "type": ["string"]
+          },
+          "value": {
+            "type": ["string"]
+          }
+        }
+      }
+    },
+    "billingType": {
+      "type": ["null", "string"]
+    },
+    "effortAllocation": {
+      "type": ["null", "object"],
+      "properties": {
+        "mode": {
+          "type": ["string"]
+        },
+        "totalEffort": {
+          "type": ["null", "integer"]
+        },
+        "allocatedEffort": {
+          "type": ["null", "integer"]
+        },
+        "dailyAllocationPercentage": {
+          "type": ["null", "integer"]
+        }
+      }
+    },
+    "finance": {
+      "type": ["null", "object"],
+      "properties": {
+        "currency": {
+          "type": ["null", "string"]
+        },
+        "actualFees": {
+          "type": ["null", "number"]
+        },
+        "actualCost": {
+          "type": ["null", "number"]
+        },
+        "plannedFees": {
+          "type": ["null", "number"]
+        },
+        "plannedCost": {
+          "type": ["null", "number"]
+        }
+      }
+    }
+  }
+}

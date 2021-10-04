@@ -1,0 +1,65 @@
+{
+  "type": ["object"],
+  "properties": {
+    "id": {
+      "type": ["string"]
+    },
+    "accountId": {
+      "type": ["string"]
+    },
+    "title": {
+      "type": ["string"]
+    },
+    "type": {
+      "type": ["string"]
+    },
+    "sharedIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "spaceId": {
+      "type": ["null", "string"]
+    },
+    "settings": {
+      "type": ["null", "object"],
+      "properties": {
+        "inheritanceType": {
+          "type": ["null", "string"]
+        },
+        "readOnly": {
+          "type": ["boolean"]
+        },
+        "allowTime": {
+          "type": ["null", "boolean"]
+        },
+        "decimalPlaces": {
+          "type": ["null", "integer"]
+        },
+        "useThousandsSeparator": {
+          "type": ["null", "boolean"]
+        },
+        "aggregation": {
+          "type": ["null", "string"]
+        },
+        "values": {
+          "type": ["null", "array"],
+          "items": {}
+        },
+        "allowOtherValues": {
+          "type": ["null", "boolean"]
+        },
+        "currency": {
+          "type": ["null", "string"]
+        },
+        "contacts": {
+          "type": ["null", "array"],
+          "items": {
+            "type": ["string"]
+          }
+        }
+      }
+    }
+  }
+}
