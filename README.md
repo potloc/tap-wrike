@@ -8,9 +8,15 @@ This tap:
 
 - Pulls raw data from [Wrike](https://developers.wrike.com/api)
 - Extracts the following resources:
-  - Projects & Folders
-  - Custom Fields
-  - Tasks
-  - Timelogs
+  - [Projects](https://developers.wrike.com/api/v4/folders-projects/)
+  - [Folders](https://developers.wrike.com/api/v4/folders-projects/)
+  - [Custom Fields](https://developers.wrike.com/api/v4/custom-fields/) (`FULL_TABLE` replication)
+  - [Tasks](https://developers.wrike.com/api/v4/tasks/)
+  - [Timelogs](https://developers.wrike.com/api/v4/timelogs/)
+  - Does not (yet) import from other endpoints of the Wrike API
 - Outputs the schema for each resource
-- (TODO) Incrementally pulls data based on the input state
+- Incrementally pulls data based on the input state
+
+## Config
+
+The only configuration required is a Wrike token (see `sample_config.json`)
