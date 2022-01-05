@@ -6,7 +6,7 @@ from singer import utils, metadata, Transformer
 from singer.catalog import Catalog, CatalogEntry
 from singer.schema import Schema
 
-from tap_wrike.client import Client
+from tap_wrike.client import Client, OAuth2Client
 
 
 class dotdict(dict):
@@ -202,7 +202,10 @@ def main():
         else:
             catalog = discover()
 
-        client = Client(args.config["token"])
+        if args.config["client_id"] and args.config["client_secret"] and args.config["refresh_token"]:
+            client = OAuth2Client(args.config["client_id"], args.config["client_secret"], args.config["refresh_token"])
+        else:
+            client = Client(args.config["token"])
         sync(args.config, args.state, catalog, client)
 
 

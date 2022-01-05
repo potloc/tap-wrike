@@ -1,3 +1,6 @@
 {
-  "token": "my_wrike_token"
+  "token": "my_wrike_permanent_token",
+  "client_id": "oauth2_client_id",
+  "client_secret": "oauth2_client_secret",
+  "refresh_token": "oauth2_refresh_token"
 }
