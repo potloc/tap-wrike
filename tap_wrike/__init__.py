@@ -57,6 +57,12 @@ STREAMS = {
         "replication_method": "INCREMENTAL",
         "replication_key": "updatedDate",
     }),
+    "users": dotdict({
+        "path": "contacts",
+        "params": {
+            "fields": "[\"metadata\",\"workScheduleId\"]",
+        },
+    }),
 }
 
 def get_abs_path(path):
