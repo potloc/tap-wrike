@@ -13,7 +13,8 @@ This tap:
   - [Custom Fields](https://developers.wrike.com/api/v4/custom-fields/) (`FULL_TABLE` replication)
   - [Tasks](https://developers.wrike.com/api/v4/tasks/)
   - [Timelogs](https://developers.wrike.com/api/v4/timelogs/)
-  - [Contacts](https://developers.wrike.com/api/v4/contacts/) (`FULL_TABLE` replication)
+  - [Contacts/Users](https://developers.wrike.com/api/v4/contacts/) (`FULL_TABLE` replication)
+  - Workflow Stage History, using the [Data Export endpoint](https://developers.wrike.com/api/v4/data-export/)
   - Does not (yet) import from other endpoints of the Wrike API
 - Outputs the schema for each resource
 - Incrementally pulls data based on the input state

@@ -1,3 +1,4 @@
+import csv
 import backoff
 import requests
 import singer
@@ -11,7 +12,7 @@ LOGGER = singer.get_logger()
 class Server5xxError(Exception):
     pass
 
-class Unauthorized401Error(Exception):
+class UnauthorizedError(Exception):
     pass
 
 class Client:
@@ -24,8 +25,8 @@ class Client:
         max_tries=7,
         factor=3
     )
-    def get(self, path, **params):
-        url = f"{API_URL}/{path}"
+    def get(self, path, parse_json=True, **params):
+        url = f"{API_URL}/{path}" if "http" not in path else path
 
         headers = {
             "Authorization": f"Bearer {self.token}"
@@ -39,21 +40,28 @@ class Client:
         # NOTE: If we notice rate limiting, use the following singer util:
         # https://github.com/singer-io/singer-python/blob/master/singer/utils.py#L81
 
-        if response.status_code == 401:
-            raise Unauthorized401Error()
+        if response.status_code == 401 or response.status_code == 403:
+            raise UnauthorizedError()
 
         if response.status_code != 200:
             LOGGER.error(f"{response.status_code}: {response.text}")
             response.raise_for_status()
 
-        # Catch invalid json response
-        try:
-            response_json = response.json()
-        except Exception as err:
-            LOGGER.error(str(err))
-            raise
+        data = response
+        next_page_token = None # Default value
 
-        return response_json["data"], response_json.get("nextPageToken")
+        if parse_json:
+            # Catch invalid json response
+            try:
+                response_json = response.json()
+            except Exception as err:
+                LOGGER.error(str(err))
+                raise
+
+            data = response_json.get("data")
+            next_page_token = response_json.get("nextPageToken")
+
+        return data, next_page_token
 
 class OAuth2Client:
     def __init__(self, client_id, client_secret, refresh_token):
@@ -76,7 +84,8 @@ class OAuth2Client:
             "grant_type": "refresh_token",
             "client_id": self.client_id,
             "client_secret": self.client_secret,
-            "refresh_token": self.refresh_token
+            "refresh_token": self.refresh_token,
+            "scope": "wsReadOnly,dataExportFull"
         }
 
         response = requests.post(AUTH_URL, headers=headers, data=data)
@@ -105,16 +114,34 @@ class OAuth2Client:
             self.refresh_client()
         return self.cached_client
 
-    @backoff.on_exception(
-        backoff.expo,
-        (Server5xxError, ConnectionError),
-        max_tries=7,
-        factor=3
-    )
     def get(self, path, **params):
         for _attempt in range(10):
             client = self.get_client()
             try:
                 return client.get(path, **params)
-            except Unauthorized401Error:
+            except UnauthorizedError:
                 self.refresh_client()
+
+# Some Wrike Data can only be obtained through the "dataExport" API.
+# This API returns a list of URLs pointing to CSV files
+class CSVClient:
+    def __init__(self, oauth_client):
+        self.client = oauth_client
+        self.data_export_cache = None
+
+    def get_data_export_urls(self):
+        if self.data_export_cache is None:
+            data_export_resources = self.client.get("data_export")[0][0].get("resources", [])
+            data_export_map = { resource.get("name"): resource.get("url") for resource in data_export_resources }
+            self.data_export_cache = data_export_map
+        return self.data_export_cache
+
+    def get(self, table_name, **params):
+        csv_url = self.get_data_export_urls().get(table_name)
+
+        if csv_url is None:
+            LOGGER.error(f"No CSV URL found for table {table_name}")
+            raise
+
+        response, next_page_token = self.client.get(csv_url, parse_json=False)
+        return csv.DictReader(response.text.splitlines(), delimiter=","), next_page_token

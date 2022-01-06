@@ -1,0 +1,21 @@
+{
+  "type": ["object"],
+  "properties": {
+    "work_id": {
+      "type": ["string"]
+    },
+    "old_workflow_stage_id": {
+      "type": ["string"]
+    },
+    "new_workflow_stage_id": {
+      "type": ["string"]
+    },
+    "user_id": {
+      "type": ["string"]
+    },
+    "change_datetime": {
+      "type": ["string"],
+      "format": "date-time"
+    }
+  }
+}

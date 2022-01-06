@@ -6,7 +6,7 @@ from singer import utils, metadata, Transformer
 from singer.catalog import Catalog, CatalogEntry
 from singer.schema import Schema
 
-from tap_wrike.client import Client, OAuth2Client
+from tap_wrike.client import Client, OAuth2Client, CSVClient
 
 
 class dotdict(dict):
@@ -62,6 +62,14 @@ STREAMS = {
         "params": {
             "fields": "[\"metadata\",\"workScheduleId\"]",
         },
+    }),
+    "workflow_stage_history": dotdict({
+        "csv": True,
+        "path": "work_workflow_stage_history",
+        "params": {},
+        "key_properties": ["work_id", "old_workflow_stage_id", "new_workflow_stage_id", "user_id", "change_datetime"],
+        "replication_method": "INCREMENTAL",
+        "replication_key": "change_datetime",
     }),
 }
 
@@ -121,6 +129,7 @@ def sync_endpoint(config, state, stream, client):
     """ Sync data from tap source """
 
     bookmark_column = stream.get("replication_key")
+    bookmark_properties = [bookmark_column] if bookmark_column else None
     last_bookmark = singer.get_bookmark(state, stream.catalog_entry.tap_stream_id, bookmark_column)
     bookmark_params = {}
     if (bookmark_column is not None) and (last_bookmark is not None):
@@ -130,9 +139,11 @@ def sync_endpoint(config, state, stream, client):
         stream_name=stream.catalog_entry.tap_stream_id,
         schema=stream.catalog_entry.schema.to_dict(),
         key_properties=stream.catalog_entry.key_properties,
+        bookmark_properties=bookmark_properties,
     )
 
-    max_bookmark = utils.strptime_with_tz(last_bookmark) if last_bookmark else None
+    parsed_last_bookmark = utils.strptime_to_utc(last_bookmark) if last_bookmark else None
+    max_bookmark = parsed_last_bookmark
     total_records = 0
 
     tap_data, next_page_token = client.get(stream.path, **stream.params, **bookmark_params)
@@ -146,13 +157,18 @@ def sync_endpoint(config, state, stream, client):
                                                         stream.catalog_entry.schema.to_dict(),
                                                         metadata.to_map(stream.catalog_entry.metadata))
 
+                if bookmark_column:
+                    parsed_bookmark = utils.strptime_with_tz(row[bookmark_column])
+
+                    if parsed_last_bookmark is not None and parsed_bookmark < parsed_last_bookmark:
+                        continue # Skip this data point as it is older than the last bookmark
+
+                    if max_bookmark is None or parsed_bookmark >= max_bookmark:
+                        max_bookmark = parsed_bookmark
+
                 # write one row to the stream:
                 singer.write_record(stream.catalog_entry.tap_stream_id, processed_row)
                 total_records += 1
-
-                if bookmark_column:
-                    parsed_bookmark = utils.strptime_with_tz(row[bookmark_column])
-                    max_bookmark = max(max_bookmark, parsed_bookmark) if max_bookmark is not None else parsed_bookmark
 
             if next_page_token is None: break
 
@@ -166,7 +182,7 @@ def sync_endpoint(config, state, stream, client):
     return total_records
 
 
-def sync(config, state, catalog, client):
+def sync(config, state, catalog, client, csv_client):
     # Get selected_streams from catalog
     selected_streams = []
     for catalog_entry in catalog.get_selected_streams(state):
@@ -181,7 +197,8 @@ def sync(config, state, catalog, client):
 
         LOGGER.info(f"Syncing stream: {stream_name}")
 
-        total_records = sync_endpoint(config, state, stream, client)
+        endpoint_client = csv_client if stream.get("csv", False) else client
+        total_records = sync_endpoint(config, state, stream, endpoint_client)
 
         LOGGER.info(f"FINISHED Syncing: {stream_name}, total_records: {total_records}")
 
@@ -204,9 +221,12 @@ def main():
 
         if args.config["client_id"] and args.config["client_secret"] and args.config["refresh_token"]:
             client = OAuth2Client(args.config["client_id"], args.config["client_secret"], args.config["refresh_token"])
+            csv_client = CSVClient(client)
         else:
             client = Client(args.config["token"])
-        sync(args.config, args.state, catalog, client)
+            csv_client = None
+
+        sync(args.config, args.state, catalog, client, csv_client)
 
 
 if __name__ == "__main__":
