@@ -81,6 +81,21 @@ STREAMS = {
             },
         }],
     }),
+    "workflows": dotdict({
+        "path": "workflows",
+        "params": {},
+        "transforms": [{
+            "name": "decode_ids",
+            "config": {
+                "keymaps": {
+                    "id": "workflow_workflow_stage_history_id",
+                    "customStatuses": {
+                        "id": "workflow_stage_workflow_stage_history_id",
+                    },
+                },
+            },
+        }],
+    }),
     "workflow_stage_history": dotdict({
         "csv": True,
         "path": "work_workflow_stage_history",

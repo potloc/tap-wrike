@@ -39,9 +39,21 @@ def transform_decode_ids(config, record, schema, metadata=None):
         # And everything above 2^29 is negative due to the two's complement representation
         return num if num < 2**29 else num - 2**30
 
+    def apply_to_keymap(records, keymap):
+        records = records if isinstance(records, list) else [records]
+        string_key, keymap_value = keymap
+
+        for record in records:
+            if isinstance(keymap_value, dict): # Support deep nesting of properties
+                for new_keymap in keymap_value.items():
+                    apply_to_keymap(record[string_key], new_keymap)
+            else:
+                integer_key = keymap_value
+                record[integer_key] = base32_decode(record[string_key])
+
     keymaps = config.get("keymaps", {})
-    for string_key, integer_key in keymaps.items():
-        record[integer_key] = base32_decode(record[string_key])
+    for keymap in keymaps.items():
+        apply_to_keymap(record, keymap)
 
     return record
 

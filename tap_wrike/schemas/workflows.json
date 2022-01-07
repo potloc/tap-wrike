@@ -1,0 +1,52 @@
+{
+  "type": ["object"],
+  "properties": {
+    "id": {
+      "type": ["string"]
+    },
+    "workflow_workflow_stage_history_id": {
+      "type": ["integer"]
+    },
+    "name": {
+      "type": ["string"]
+    },
+    "standard": {
+      "type": ["boolean"]
+    },
+    "hidden": {
+      "type": ["boolean"]
+    },
+    "customStatuses": {
+      "type": ["array"],
+      "items": {
+        "type": ["object"],
+        "properties": {
+          "id": {
+            "type": ["string"]
+          },
+          "workflow_stage_workflow_stage_history_id": {
+            "type": ["integer"]
+          },
+          "name": {
+            "type": ["string"]
+          },
+          "standardName": {
+            "type": ["boolean"]
+          },
+          "color": {
+            "type": ["null", "string"]
+          },
+          "standard": {
+            "type": ["boolean"]
+          },
+          "group": {
+            "type": ["string"]
+          },
+          "hidden": {
+            "type": ["boolean"]
+          }
+        }
+      }
+    }
+  }
+}
