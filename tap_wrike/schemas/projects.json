@@ -4,6 +4,9 @@
     "id": {
       "type": ["string"]
     },
+    "project_workflow_stage_history_id": {
+      "type": ["integer"]
+    },
     "accountId": {
       "type": ["string"]
     },

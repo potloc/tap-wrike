@@ -16,6 +16,14 @@ STREAMS = {
         },
         "replication_method": "INCREMENTAL",
         "replication_key": "updatedDate",
+        "transforms": [{
+            "name": "decode_ids",
+            "config": {
+                "keymaps": {
+                    "id": "folder_workflow_stage_history_id",
+                },
+            },
+        }],
     }),
     "projects": dotdict({
         "path": "folders",
@@ -25,6 +33,14 @@ STREAMS = {
         },
         "replication_method": "INCREMENTAL",
         "replication_key": "updatedDate",
+        "transforms": [{
+            "name": "decode_ids",
+            "config": {
+                "keymaps": {
+                    "id": "project_workflow_stage_history_id",
+                },
+            },
+        }],
     }),
     "tasks": dotdict({
         "path": "tasks",
@@ -34,6 +50,14 @@ STREAMS = {
         },
         "replication_method": "INCREMENTAL",
         "replication_key": "updatedDate",
+        "transforms": [{
+            "name": "decode_ids",
+            "config": {
+                "keymaps": {
+                    "id": "task_workflow_stage_history_id",
+                },
+            },
+        }],
     }),
     "timelogs": dotdict({
         "path": "timelogs",
@@ -48,6 +72,14 @@ STREAMS = {
         "params": {
             "fields": "[\"metadata\",\"workScheduleId\"]",
         },
+        "transforms": [{
+            "name": "decode_ids",
+            "config": {
+                "keymaps": {
+                    "id": "user_workflow_stage_history_id",
+                },
+            },
+        }],
     }),
     "workflow_stage_history": dotdict({
         "csv": True,

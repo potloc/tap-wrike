@@ -4,6 +4,9 @@
     "id": {
       "type": ["string"]
     },
+    "user_workflow_stage_history_id": {
+      "type": ["integer"]
+    },
     "firstName": {
       "type": ["string"]
     },

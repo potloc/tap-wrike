@@ -2,12 +2,13 @@
 import os
 import json
 import singer
-from singer import utils, metadata, Transformer
+from singer import utils, metadata
 from singer.catalog import Catalog, CatalogEntry
 from singer.schema import Schema
 
 from tap_wrike.client import Client, OAuth2Client, CSVClient
 from tap_wrike.streams import STREAMS
+from tap_wrike.transforms import Transformer
 
 REQUIRED_CONFIG_KEYS = [] # None since we either allow a permanent token or an OAuth2 refresh token
 LOGGER = singer.get_logger()
@@ -87,7 +88,7 @@ def sync_endpoint(config, state, stream, client):
 
     tap_data, next_page_token = client.get(stream.path, **stream.params, **bookmark_params)
 
-    with Transformer() as transformer:
+    with Transformer(stream) as transformer:
         while True:
             for row in tap_data:
                 # Use the singer transformer for Field selection
