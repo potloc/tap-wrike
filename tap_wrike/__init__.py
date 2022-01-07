@@ -7,71 +7,10 @@ from singer.catalog import Catalog, CatalogEntry
 from singer.schema import Schema
 
 from tap_wrike.client import Client, OAuth2Client, CSVClient
+from tap_wrike.streams import STREAMS
 
-
-class dotdict(dict):
-    __getattr__ = dict.__getitem__
-    __setattr__ = dict.__setitem__
-    __delattr__ = dict.__delitem__
-
-REQUIRED_CONFIG_KEYS = ["token"]
+REQUIRED_CONFIG_KEYS = [] # None since we either allow a permanent token or an OAuth2 refresh token
 LOGGER = singer.get_logger()
-
-STREAMS = {
-    "customfields": dotdict({
-        "path": "customfields",
-        "params": {},
-    }),
-    "folders": dotdict({
-        "path": "folders",
-        "params": {
-            "fields": "[\"metadata\",\"hasAttachments\",\"attachmentCount\",\"briefDescription\",\"customFields\",\"customColumnIds\",\"superParentIds\",\"space\",\"contractType\"]",
-            "project": "false",
-        },
-        "replication_method": "INCREMENTAL",
-        "replication_key": "updatedDate",
-    }),
-    "projects": dotdict({
-        "path": "folders",
-        "params": {
-            "fields": "[\"metadata\",\"hasAttachments\",\"attachmentCount\",\"briefDescription\",\"customFields\",\"customColumnIds\",\"superParentIds\",\"space\",\"contractType\"]",
-            "project": "true",
-        },
-        "replication_method": "INCREMENTAL",
-        "replication_key": "updatedDate",
-    }),
-    "tasks": dotdict({
-        "path": "tasks",
-        "params": {
-            "fields": "[\"authorIds\",\"hasAttachments\",\"attachmentCount\",\"parentIds\",\"superParentIds\",\"sharedIds\",\"responsibleIds\",\"description\",\"briefDescription\",\"recurrent\",\"superTaskIds\",\"subTaskIds\",\"dependencyIds\",\"metadata\",\"customFields\",\"effortAllocation\",\"billingType\"]",
-            "pageSize": 1000,
-        },
-        "replication_method": "INCREMENTAL",
-        "replication_key": "updatedDate",
-    }),
-    "timelogs": dotdict({
-        "path": "timelogs",
-        "params": {
-            "fields": "[\"billingType\"]"
-        },
-        "replication_method": "INCREMENTAL",
-        "replication_key": "updatedDate",
-    }),
-    "users": dotdict({
-        "path": "contacts",
-        "params": {
-            "fields": "[\"metadata\",\"workScheduleId\"]",
-        },
-    }),
-    "workflow_stage_history": dotdict({
-        "csv": True,
-        "path": "work_workflow_stage_history",
-        "params": {},
-        "key_properties": ["work_id", "old_workflow_stage_id", "new_workflow_stage_id", "user_id", "change_datetime"],
-        "replication_method": "INCREMENTAL",
-        "replication_key": "change_datetime",
-    }),
-}
 
 def get_abs_path(path):
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), path)
