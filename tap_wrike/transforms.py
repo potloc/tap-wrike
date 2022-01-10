@@ -25,19 +25,13 @@ def transform_decode_ids(config, record, schema, metadata=None):
         - Then the next 2 characters represent the entity type (e.g. 'KU' for users)
         - Finally, the last 6 characters correspond to the integer ID of the entity
           - This ID is base32 encoded using the following character set: A-Z 2-7 (in this order)
-          - It seems like this ID is signed and therefore that the string ID is encoded using
-            the two's complement binary representation of the integer ID
         """
         encoded_entity_id = string_value[-6:]
         num = 0
         for i, char in enumerate(reversed(encoded_entity_id)):
             digit = ord(char) - ord('A') if char >= 'A' else 26 + ord(char) - ord('2')
             num += digit * (32 ** i)
-
-        # The number is stored in 30 bits: 32^6 = (2^5)^6 = 2^30
-        # 2^30 is the largest number that can be represented in 30 bits
-        # And everything above 2^29 is negative due to the two's complement representation
-        return num if num < 2**29 else num - 2**30
+        return num
 
     def apply_to_keymap(records, keymap):
         records = records if isinstance(records, list) else [records]
