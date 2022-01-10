@@ -20,7 +20,7 @@ STREAMS = {
             "name": "decode_ids",
             "config": {
                 "keymaps": {
-                    "id": "folder_workflow_stage_history_id",
+                    "id": "data_export_api_id",
                 },
             },
         }],
@@ -37,7 +37,7 @@ STREAMS = {
             "name": "decode_ids",
             "config": {
                 "keymaps": {
-                    "id": "project_workflow_stage_history_id",
+                    "id": "data_export_api_id",
                 },
             },
         }],
@@ -54,7 +54,7 @@ STREAMS = {
             "name": "decode_ids",
             "config": {
                 "keymaps": {
-                    "id": "task_workflow_stage_history_id",
+                    "id": "data_export_api_id",
                 },
             },
         }],
@@ -76,7 +76,7 @@ STREAMS = {
             "name": "decode_ids",
             "config": {
                 "keymaps": {
-                    "id": "user_workflow_stage_history_id",
+                    "id": "data_export_api_id",
                 },
             },
         }],
@@ -88,15 +88,15 @@ STREAMS = {
             "name": "decode_ids",
             "config": {
                 "keymaps": {
-                    "id": "workflow_workflow_stage_history_id",
+                    "id": "data_export_api_id",
                     "customStatuses": {
-                        "id": "workflow_stage_workflow_stage_history_id",
+                        "id": "data_export_api_id",
                     },
                 },
             },
         }],
     }),
-    "workflow_stage_history": dotdict({
+    "data_export_api_workflow_stage_history": dotdict({
         "csv": True,
         "path": "work_workflow_stage_history",
         "params": {},

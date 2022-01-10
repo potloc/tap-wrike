@@ -4,7 +4,7 @@
     "id": {
       "type": ["string"]
     },
-    "task_workflow_stage_history_id": {
+    "data_export_api_id": {
       "type": ["integer"]
     },
     "accountId": {

@@ -14,8 +14,12 @@ This tap:
   - [Tasks](https://developers.wrike.com/api/v4/tasks/)
   - [Timelogs](https://developers.wrike.com/api/v4/timelogs/)
   - [Contacts/Users](https://developers.wrike.com/api/v4/contacts/) (`FULL_TABLE` replication)
-  - Workflow Stage History, using the [Data Export endpoint](https://developers.wrike.com/api/v4/data-export/)
+  - [Workflows](https://developers.wrike.com/api/v4/workflows/) (`FULL_TABLE` replication)
+    - And their `customStatuses` (a.k.a. Workflow Stages)
   - Does not (yet) import from other endpoints of the Wrike API
+- **Additionally**, provided an OAuth access token (see below), extracts the following resources **from the [Data Export API](https://developers.wrike.com/api/v4/data-export/)**:
+  - Workflow Stage History (as a table named `data_export_api_workflow_stage_history`)
+  - Data from this export type uses a different ID system so an additional column named `data_export_api_id` is also added to the other resources in order to make joins easier between the 2 data sources
 - Outputs the schema for each resource
 - Incrementally pulls data based on the input state
 
