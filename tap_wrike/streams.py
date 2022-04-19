@@ -106,7 +106,9 @@ STREAMS = {
     }),
     "groups": dotdict({
         "path": "groups",
-        "params": {},
+        "params": {
+            "fields": "[\"metadata\"]",
+        },
         "replication_method": "FULL_TABLE",
         "transforms": [{
             "name": "decode_ids",
