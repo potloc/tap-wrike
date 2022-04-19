@@ -104,4 +104,19 @@ STREAMS = {
         "replication_method": "INCREMENTAL",
         "replication_key": "change_datetime",
     }),
+    "groups": dotdict({
+        "path": "groups",
+        "params": {
+            "fields": "[\"metadata\"]",
+        },
+        "replication_method": "FULL_TABLE",
+        "transforms": [{
+            "name": "decode_ids",
+            "config": {
+                "keymaps": {
+                    "id": "data_export_api_id",
+                },
+            },
+        }],
+    })
 }
