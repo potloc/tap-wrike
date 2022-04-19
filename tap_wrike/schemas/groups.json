@@ -38,6 +38,20 @@
       },
       "avatarUrl": {
         "type": ["string"]
+      },
+      "metadata": {
+        "type": ["null", "array"],
+        "items": {
+          "type": ["object"],
+          "properties": {
+            "key": {
+              "type": ["string"]
+            },
+            "value": {
+              "type": ["string"]
+            }
+          }
+        }
       }
     }
   }
