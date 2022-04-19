@@ -1,0 +1,57 @@
+{
+    "type": ["object"],
+    "properties": {
+      "id": {
+        "type": ["string"]
+      },
+      "accountId": {
+        "type": ["string"]
+      },
+      "title": {
+        "type": ["string"]
+      },
+      "createdDate": {
+        "type": ["string"],
+        "format": "date-time"
+      },
+      "updatedDate": {
+        "type": ["string"],
+        "format": "date-time"
+      },
+      "memberIds": {
+        "type": ["null", "array"],
+        "items": {
+          "type": ["string"]
+        }
+      },
+      "childIds": {
+        "type": ["null", "array"],
+        "items": {
+          "type": ["string"]
+        }
+      },
+      "parentIds": {
+        "type": ["null", "array"],
+        "items": {
+          "type": ["string"]
+        }
+      },
+      "avatarUrl": {
+        "type": ["string"]
+      },
+      "metadata": {
+        "type": ["null", "array"],
+        "items": {
+          "type": ["object"],
+          "properties": {
+            "key": {
+              "type": ["string"]
+            },
+            "value": {
+              "type": ["string"]
+            }
+          }
+        }
+      }
+    }
+  }
