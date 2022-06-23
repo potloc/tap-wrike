@@ -57,7 +57,7 @@ class Client:
             except Exception as err:
                 LOGGER.error(str(err))
                 raise
-            logging.info(response.json)
+            LOGGER.info(response.json)
             data = response_json.get("data")
             next_page_token = response_json.get("nextPageToken")
 
