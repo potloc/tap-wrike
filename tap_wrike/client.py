@@ -49,8 +49,6 @@ class Client:
 
         data = response
         next_page_token = None # Default value
-        LOGGER.info("OUR DATA")
-        LOGGER.info(data)
         if parse_json:
             # Catch invalid json response
             try:
