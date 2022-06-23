@@ -49,7 +49,8 @@ class Client:
 
         data = response
         next_page_token = None # Default value
-
+        LOGGER.info("OUR DATA")
+        LOGGER.info(data)
         if parse_json:
             # Catch invalid json response
             try:
@@ -57,7 +58,7 @@ class Client:
             except Exception as err:
                 LOGGER.error(str(err))
                 raise
-            LOGGER.info(response.json)
+
             data = response_json.get("data")
             next_page_token = response_json.get("nextPageToken")
 
