@@ -84,7 +84,7 @@ class OAuth2Client:
             "client_id": self.client_id,
             "client_secret": self.client_secret,
             "refresh_token": self.refresh_token,
-            "scope": "wsReadOnly,dataExportFull"
+            "scope": "wsReadOnly,dataExportFull,wsReadWrite,amReadOnlyGroup"
         }
 
         response = requests.post(AUTH_URL, headers=headers, data=data)
