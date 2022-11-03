@@ -108,7 +108,7 @@ STREAMS = {
         "csv": True,
         "path": "work_custom_field_history",
         "params": {},
-        "key_properties": ["work_id", "user_resource_id", "old_custom_field_value", "custom_field_id", "change_datetime"],
+        "key_properties": ["work_id", "user_resource_id", "custom_field_id", "change_datetime"],
         "replication_method": "INCREMENTAL",
         "replication_key": "change_datetime",
     }),
