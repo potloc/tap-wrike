@@ -104,6 +104,14 @@ STREAMS = {
         "replication_method": "INCREMENTAL",
         "replication_key": "change_datetime",
     }),
+    "data_export_api_work_custom_field_history": dotdict({
+        "csv": True,
+        "path": "work_custom_field_history",
+        "params": {},
+        "key_properties": ["work_id", "user_resource_id", "old_custom_field_value", "custom_field_id", "change_datetime"],
+        "replication_method": "INCREMENTAL",
+        "replication_key": "change_datetime",
+    }),
     "groups": dotdict({
         "path": "groups",
         "params": {
