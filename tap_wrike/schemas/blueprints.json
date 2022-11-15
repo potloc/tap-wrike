@@ -12,6 +12,9 @@
       "items": {
         "type": ["string"]
       }
+    },
+    "data_export_api_id": {
+      "type": ["integer"]
     }
   }
 }
