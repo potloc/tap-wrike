@@ -42,6 +42,10 @@ STREAMS = {
             },
         }],
     }),
+    "blueprints": dotdict({
+        "path": "folder_blueprints",
+        "replication_method": "FULL_TABLE",
+    }),
     "tasks": dotdict({
         "path": "tasks",
         "params": {
