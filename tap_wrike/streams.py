@@ -45,6 +45,8 @@ STREAMS = {
     "blueprints": dotdict({
         "path": "folder_blueprints",
         "replication_method": "FULL_TABLE",
+        "params": {},
+        "transforms": [{}]
     }),
     "tasks": dotdict({
         "path": "tasks",
