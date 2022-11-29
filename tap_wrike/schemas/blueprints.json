@@ -1,0 +1,20 @@
+{
+  "type": ["object"],
+  "properties": {
+    "id": {
+      "type": ["string"]
+    },
+    "title": {
+      "type": ["string"]
+    },
+    "childIds": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["string"]
+      }
+    },
+    "data_export_api_id": {
+      "type": ["integer"]
+    }
+  }
+}

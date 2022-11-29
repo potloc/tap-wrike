@@ -42,6 +42,19 @@ STREAMS = {
             },
         }],
     }),
+    "blueprints": dotdict({
+        "path": "folder_blueprints",
+        "replication_method": "FULL_TABLE",
+        "params": {},
+         "transforms": [{
+            "name": "decode_ids",
+            "config": {
+                "keymaps": {
+                    "id": "data_export_api_id",
+                },
+            },
+        }],
+    }),
     "tasks": dotdict({
         "path": "tasks",
         "params": {
