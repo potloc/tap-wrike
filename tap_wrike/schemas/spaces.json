@@ -1,0 +1,29 @@
+{
+    "type": ["object"],
+    "properties": {
+        "id": {
+            "type": ["string"]
+        },
+        "title": {
+            "type": ["string"]
+        },
+        "avatarUrl": {
+                "type": ["string"]
+        },
+        "accessType": {
+                "type": ["string"]
+        },
+        "archived": {
+                "type": ["boolean"]
+        },
+        "guestRoleId": {
+            "type": ["string"]
+        },
+        "defaultProjectWorkflowId": {
+            "type": ["string"]
+        },
+        "defaultTaskWorkflowId": {
+            "type": ["string"]
+        }
+    }
+}
