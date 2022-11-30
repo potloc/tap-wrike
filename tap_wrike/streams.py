@@ -139,5 +139,13 @@ STREAMS = {
                 },
             },
         }],
+    }),
+    "spaces": dotdict({
+        "path": "spaces",
+        "params": {
+            "withArchived": "true",
+            "userIsMember": "true"
+        },
+        "replication_method": "FULL_TABLE"
     })
 }
