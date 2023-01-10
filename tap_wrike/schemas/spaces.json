@@ -1,0 +1,166 @@
+{
+    "type": ["object"],
+    "properties": {
+      "id": {
+        "type": ["string"]
+      },
+      "data_export_api_id": {
+        "type": ["integer"]
+      },
+      "title": {
+        "type": ["string"]
+      },
+      "description": {
+        "type": ["string"]
+      },
+      "accessType": {
+        "type": ["null", "string"]
+      },
+      "archived": {
+        "type": ["null", "boolean"]
+      },
+      "members": {
+        "type": ["array"],
+        "items": {
+          "type": ["object"],
+          "properties": {
+            "id": {
+                "type": ["string"]
+            },
+            "accessRoleId": {
+                "type": ["string"]
+            },
+            "isManager": {
+                "type": ["null", "boolean"]
+            }
+          }
+        }
+      },
+      "parentIds": {
+        "type": ["array"],
+        "items": {
+          "type": ["string"]
+        }
+      },
+      "childIds": {
+        "type": ["null", "array"],
+        "items": {
+          "type": ["string"]
+        }
+      },
+      "superParentIds": {
+        "type": ["null", "array"],
+        "items": {
+          "type": ["string"]
+        }
+      },
+      "scope": {
+        "type": ["string"]
+      },
+      "hasAttachments": {
+        "type": ["boolean"]
+      },
+      "attachmentCount": {
+        "type": ["null", "integer"]
+      },
+      "permalink": {
+        "type": ["string"]
+      },
+      "workflowId": {
+        "type": ["string"]
+      },
+      "metadata": {
+        "type": ["null", "array"],
+        "items": {
+          "type": ["object"],
+          "properties": {
+            "key": {
+              "type": ["string"]
+            },
+            "value": {
+              "type": ["string"]
+            }
+          }
+        }
+      },
+      "customFields": {
+        "type": ["null", "array"],
+        "items": {
+          "type": ["object"],
+          "properties": {
+            "id": {
+              "type": ["string"]
+            },
+            "value": {
+              "type": ["string"]
+            }
+          }
+        }
+      },
+      "customColumnIds": {
+        "type": ["null", "array"],
+        "items": {
+          "type": ["string"]
+        }
+      },
+      "project": {
+        "type": ["null", "object"],
+        "properties": {
+          "authorId": {
+            "type": ["null", "string"]
+          },
+          "ownerIds": {
+            "type": ["array"],
+            "items": {
+              "type": ["string"]
+            }
+          },
+          "status": {
+            "type": ["null", "string"]
+          },
+          "customStatusId": {
+            "type": ["null", "string"]
+          },
+          "startDate": {
+            "type": ["null", "string"],
+            "format": "date"
+          },
+          "endDate": {
+            "type": ["null", "string"],
+            "format": "date"
+          },
+          "createdDate": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "completedDate": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "contractType": {
+            "type": ["null", "string"]
+          },
+          "finance": {
+            "type": ["null", "object"],
+            "properties": {
+              "currency": {
+                "type": ["null", "string"]
+              },
+              "actualFees": {
+                "type": ["null", "number"]
+              },
+              "actualCost": {
+                "type": ["null", "number"]
+              },
+              "plannedFees": {
+                "type": ["null", "number"]
+              },
+              "plannedCost": {
+                "type": ["null", "number"]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
