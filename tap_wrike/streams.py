@@ -55,6 +55,22 @@ STREAMS = {
             },
         }],
     }),
+    "spaces": dotdict({
+        "path": "spaces",
+        "replication_method": "FULL_TABLE",
+        "params": {
+            "withArchived": True,
+            "fields": "[\"members\"]"
+        },
+         "transforms": [{
+            "name": "decode_ids",
+            "config": {
+                "keymaps": {
+                    "id": "data_export_api_id",
+                },
+            },
+        }],
+    }),
     "tasks": dotdict({
         "path": "tasks",
         "params": {
