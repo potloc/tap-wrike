@@ -1,0 +1,40 @@
+{
+    "type": ["object"],
+    "properties": {
+      "id": {
+        "type": ["string"]
+      },
+      "data_export_api_id": {
+        "type": ["integer"]
+      },
+      "title": {
+        "type": ["string"]
+      },
+      "description": {
+        "type": ["string"]
+      },
+      "accessType": {
+        "type": ["null", "string"]
+      },
+      "archived": {
+        "type": ["null", "boolean"]
+      },
+      "members": {
+        "type": ["array"],
+        "items": {
+          "type": ["object"],
+          "properties": {
+            "id": {
+                "type": ["string"]
+            },
+            "accessRoleId": {
+                "type": ["string"]
+            },
+            "isManager": {
+                "type": ["null", "boolean"]
+            }
+          }
+        }
+      }
+    }
+  }
