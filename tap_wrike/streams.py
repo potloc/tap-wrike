@@ -88,6 +88,11 @@ STREAMS = {
             },
         }],
     }),
+    "timelog_categories": dotdict({
+        "path": "timelog_categories",
+        "params": {},
+        "replication_method": "FULL_TABLE"
+    }),
     "timelogs": dotdict({
         "path": "timelogs",
         "params": {
