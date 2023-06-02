@@ -12,9 +12,6 @@ STREAMS = {
             "config": {
                 "keymaps": {
                     "id": "data_export_api_id",
-                    "customStatuses": {
-                        "id": "data_export_api_id",
-                    },
                 },
             },
         }],
