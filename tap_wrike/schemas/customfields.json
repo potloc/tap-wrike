@@ -4,6 +4,9 @@
     "id": {
       "type": ["string"]
     },
+    "data_export_api_id": {
+      "type": ["integer"]
+    },
     "accountId": {
       "type": ["string"]
     },
