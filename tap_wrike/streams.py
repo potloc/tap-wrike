@@ -7,6 +7,14 @@ STREAMS = {
     "customfields": dotdict({
         "path": "customfields",
         "params": {},
+        "transforms": [{
+            "name": "decode_ids",
+            "config": {
+                "keymaps": {
+                    "id": "data_export_api_id",
+                },
+            },
+        }],
     }),
     "folders": dotdict({
         "path": "folders",
