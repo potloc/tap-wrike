@@ -27,7 +27,7 @@ This tap:
 
 The minimum required configuration is a Wrike **permanent** token (see `sample_config.json`)
 
-> Note - This is the DEFAULT confirguration.
+> Note - This is the DEFAULT configuration.
 
 ### Using an OAuth access token
 
