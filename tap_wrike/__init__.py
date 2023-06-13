@@ -159,12 +159,17 @@ def main():
         else:
             catalog = discover()
 
-        if args.config["client_id"] and args.config["client_secret"] and args.config["refresh_token"]:
-            client = OAuth2Client(args.config["client_id"], args.config["client_secret"], args.config["refresh_token"])
+        client_id = args.config.get("client_id", None)
+        client_secret = args.config.get("client_secret", None)
+        refresh_token = args.config.get("refresh_token", None)
+        access_token = args.config.get("token", None)
+
+        if client_id and client_secret and refresh_token:
+            client = OAuth2Client(client_id, client_secret, refresh_token)
             csv_client = CSVClient(client)
         else:
-            client = Client(args.config["token"])
-            csv_client = None
+            client = Client(access_token)
+            csv_client = CSVClient(client)
 
         sync(args.config, args.state, catalog, client, csv_client)
 

@@ -27,11 +27,15 @@ This tap:
 
 The minimum required configuration is a Wrike **permanent** token (see `sample_config.json`)
 
+> Note - This is the DEFAULT configuration.
+
 ### Using an OAuth access token
 
-**Alternatively**, one can use an OAuth access token.
+**Alternatively**, one can use an OAuth access token. This will be applied if a **refresh_token** is provided.
 
-> NOTE: This is required for the `Workflow Stage History` resource as it requires the `dataExportFull` permission
+
+> NOTE: ~~This is required for the `Workflow Stage History` resource as it requires the `dataExportFull` permission~~
+This is no longer true; a permanent token can be used for every endpoint.
 
 1. Create an app in Wrike following the instructions in "Initial Setup" [here](https://developers.wrike.com/oauth-20-authorization/)
 2. Using the client_id from step 1, go to: `https://login.wrike.com/oauth2/authorize/v4?client_id=<client_id>&response_type=code&scope=wsReadOnly,dataExportFull`
@@ -39,3 +43,6 @@ The minimum required configuration is a Wrike **permanent** token (see `sample_c
    This authorization code is only valid for 10 minutes
 4. Use the code as `authorization_code` in: `curl -X POST -d "client_id=<client_id>&client_secret=<client_secret>&grant_type=authorization_code&code=<authorization_code>" https://login.wrike.com/oauth2/token`
 5. Take the `refresh_token` returned by this request and add it to the `config.json` file
+
+
+> NOTE: We recommend using the permament token for production use, as the wrike refresh token is a rotating [refresh token](https://auth0.com/docs/secure/tokens/refresh-tokens/refresh-token-rotation) - after an hour, it will expire, causing an auth error in your integration.
