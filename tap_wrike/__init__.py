@@ -147,7 +147,7 @@ def sync(config, state, catalog, client, csv_client):
 def main():
     # Parse command line arguments
     args = utils.parse_args(REQUIRED_CONFIG_KEYS)
-    LOGGER.info(args["access_token"])
+    LOGGER.info(args["token"])
 
     # If discover flag was passed, run discovery mode and dump output to stdout
     if args.discover:
@@ -163,7 +163,7 @@ def main():
         client_id = args.config.get("client_id", None)
         client_secret = args.config.get("client_secret", None)
         refresh_token = args.config.get("refresh_token", None)
-        access_token = args.config.get("access_token", None)
+        access_token = args.config.get("token", None)
         LOGGER.info("access_token")
         LOGGER.info(access_token)
 
