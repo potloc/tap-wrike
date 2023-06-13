@@ -147,7 +147,7 @@ def sync(config, state, catalog, client, csv_client):
 def main():
     # Parse command line arguments
     args = utils.parse_args(REQUIRED_CONFIG_KEYS)
-    LOGGER.info(args["token"])
+    LOGGER.info(args.config["token"])
 
     # If discover flag was passed, run discovery mode and dump output to stdout
     if args.discover:
