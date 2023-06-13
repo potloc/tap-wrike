@@ -147,7 +147,6 @@ def sync(config, state, catalog, client, csv_client):
 def main():
     # Parse command line arguments
     args = utils.parse_args(REQUIRED_CONFIG_KEYS)
-    LOGGER.info(args.config["token"])
 
     # If discover flag was passed, run discovery mode and dump output to stdout
     if args.discover:
@@ -164,9 +163,6 @@ def main():
         client_secret = args.config.get("client_secret", None)
         refresh_token = args.config.get("refresh_token", None)
         access_token = args.config.get("token", None)
-        LOGGER.info("access_token")
-        LOGGER.info(access_token)
-
 
         if client_id and client_secret and refresh_token:
             client = OAuth2Client(client_id, client_secret, refresh_token)
