@@ -1,0 +1,23 @@
+{
+  "type": ["object"],
+  "properties": {
+    "id": {
+      "type": ["string"]
+    },
+    "title": {
+      "type": ["string"]
+    },
+    "shortTitle": {
+      "type": ["string"]
+    },
+    "avatarUrl": {
+      "type": ["string"]
+    },
+    "jobRoleId": {
+      "type": ["string"]
+    },
+    "deleted": {
+      "type": ["boolean"]
+    }
+  }
+}

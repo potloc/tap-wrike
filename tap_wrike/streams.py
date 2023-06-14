@@ -101,6 +101,11 @@ STREAMS = {
         "params": {},
         "replication_method": "FULL_TABLE"
     }),
+    "placeholders": dotdict({
+        "path": "placeholders",
+        "params": {},
+        "replication_method": "FULL_TABLE"
+    }),
     "timelogs": dotdict({
         "path": "timelogs",
         "params": {
