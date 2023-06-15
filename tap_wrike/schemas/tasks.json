@@ -25,6 +25,12 @@
         "type": ["string"]
       }
     },
+    "responsiblePlaceholderIds": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["string"]
+      }
+    },
     "superParentIds": {
       "type": ["null", "array"],
       "items": {
