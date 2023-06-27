@@ -141,7 +141,7 @@ class CSVClient:
             raise
 
         response, next_page_token = self.client.get(csv_url, parse_json=False)
-        reader = csv.DictReader(response.text.splitlines(), delimiter=",")
-        for item in reader:
-            LOGGER.info(item)
+        # reader = csv.DictReader(response.text.splitlines(), delimiter=",")
+        # for item in reader:
+        #     LOGGER.info(item)
         return csv.DictReader(response.text.splitlines(), delimiter=","), next_page_token
