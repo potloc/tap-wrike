@@ -33,7 +33,7 @@ class Client:
         }
 
         response = requests.get(url, headers=headers, params=params)
-
+        LOGGER.info(response.json())
         if response.status_code >= 500:
             raise Server5xxError()
 
@@ -88,7 +88,6 @@ class OAuth2Client:
         }
 
         response = requests.post(AUTH_URL, headers=headers, data=data)
-        LOGGER.info(response.json())
         if response.status_code >= 500:
             raise Server5xxError()
 
