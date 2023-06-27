@@ -1,0 +1,17 @@
+{
+  "type": ["object"],
+  "properties": {
+    "work_task_id": {
+      "type": ["integer"]
+    },
+    "user_id": {
+      "type": ["number"]
+    },
+    "date": {
+      "type": ["date"]
+    },
+    "effort_minutes": {
+      "type": ["number"]
+    }
+  }
+}
