@@ -8,7 +8,7 @@
       "type": ["number"]
     },
     "date": {
-      "type": ["date"]
+      "type": ["date-time"]
     },
     "effort_minutes": {
       "type": ["number"]
