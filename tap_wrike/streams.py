@@ -159,6 +159,14 @@ STREAMS = {
         "replication_method": "INCREMENTAL",
         "replication_key": "change_datetime",
     }),
+    "data_export_api_work_task_flexible_effort": dotdict({
+        "csv": True,
+        "path": "work_task_flexible_effort",
+        "params": {},
+        "key_properties": ["work_task_id", "user_id", "date", "effort_minutes"],
+        "replication_method": "INCREMENTAL",
+        "replication_key": "date",
+    }),
     "groups": dotdict({
         "path": "groups",
         "params": {
