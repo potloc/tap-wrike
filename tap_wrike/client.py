@@ -33,7 +33,6 @@ class Client:
         }
 
         response = requests.get(url, headers=headers, params=params)
-        LOGGER.info(response.json())
         if response.status_code >= 500:
             raise Server5xxError()
 
@@ -142,4 +141,5 @@ class CSVClient:
             raise
 
         response, next_page_token = self.client.get(csv_url, parse_json=False)
+        LOGGER.info(csv.DictReader(response.text.splitlines(), delimiter=",")[1])
         return csv.DictReader(response.text.splitlines(), delimiter=","), next_page_token
