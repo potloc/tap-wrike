@@ -1,57 +1,56 @@
-name: Dependabot
-on:
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
+version: 2
 
-permissions:
-  contents: write
-  pull-requests: write
-  repository-projects: read
+updates:
+  - package-ecosystem: pip
+    open-pull-requests-limit: 5
+    directory: /
+    registries: "*"
+    schedule:
+      interval: daily
+      time: "10:00"
+      timezone: America/Montreal
+    reviewers:
+      - potloc/data-engineering
+    assignees:
+      - potloc/data-engineering
+    labels:
+      - python
+      - dependencies
+    groups: # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#groups
+      minor-updates:
+        update-types:
+          - minor
+        patterns:
+          - "*"
+      major-updates:
+        update-types:
+          - major
+        patterns:
+          - "*"
+    rebase-strategy: auto
 
-jobs:
-  dependabot:
-    name: Enable Auto-Merge and Approve
-    if: ${{ github.actor == 'dependabot[bot]' && !contains(github.event.pull_request.labels.*.name, 'automerge') && !contains(github.head_ref, '/terraform/') }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Fetch Dependabot Metadata
-        id: metadata
-        uses: dependabot/fetch-metadata@v1
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: GitHub Actions - Patch or Minor
-        if: ${{ contains(github.head_ref, '/github_actions/') && (steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch') }}
-        shell: bash --noprofile --norc -xeo pipefail {0}
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr review "$PR_URL" --approve
-          gh pr merge "$PR_URL" --auto --squash
-          gh pr edit "$PR_URL" --add-label 'automerge'
-
-      - name: Development - Patch or Minor
-        if: ${{ !contains(github.head_ref, '/github_actions/') && (steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch') && steps.metadata.outputs.dependency-type == 'direct:development' }}
-        shell: bash --noprofile --norc -xeo pipefail {0}
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr review "$PR_URL" --approve
-          gh pr merge "$PR_URL" --auto --squash
-          gh pr edit "$PR_URL" --add-label 'automerge'
-
-      - name: Production - Patch
-        if: ${{ !contains(github.head_ref, '/github_actions/') && steps.metadata.outputs.update-type == 'version-update:semver-patch' && steps.metadata.outputs.dependency-type == 'direct:production' }}
-        shell: bash --noprofile --norc -xeo pipefail {0}
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr review "$PR_URL" --approve
-          gh pr merge "$PR_URL" --auto --squash
-          gh pr edit "$PR_URL" --add-label 'automerge'
+  - package-ecosystem: github-actions
+    open-pull-requests-limit: 5
+    directory: /
+    schedule:
+      interval: daily
+      time: "10:00"
+      timezone: America/Montreal
+    reviewers:
+      - potloc/data-engineering
+    assignees:
+      - potloc/data-engineering
+    labels:
+      - github-actions
+      - dependencies
+    groups:
+      minor-updates:
+        update-types:
+          - minor
+        patterns:
+          - "*"
+      major-updates:
+        update-types:
+          - major
+        patterns:
+          - "*"
