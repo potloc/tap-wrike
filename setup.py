@@ -12,7 +12,7 @@ setup(
     install_requires=[
         "backoff==2.2.1",
         "requests==2.31.0",
-        "singer-python==6.0.0",
+        "singer-python==6.0.1",
     ],
     entry_points="""
     [console_scripts]
